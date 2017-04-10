@@ -47,7 +47,9 @@ If any stage fails, reset the program. (Reset feedback) Make sure keep the statu
 3. Validate that the message was received successfully (status indicator feedback).
 4. After receiving a successful message, decrypt the message message and display it.
 
-## Custom Protocol
+## **CRAP**
+
+**C**ommunication **R**elay **A**rduino **P**rotocol
 
 **Individual Byte:**
 
