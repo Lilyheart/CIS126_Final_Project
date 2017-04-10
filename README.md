@@ -49,11 +49,28 @@ If any stage fails, reset the program. (Reset feedback) Make sure keep the statu
 
 ## Custom Protocol
 
-- Start of message
-- User ID
-- Length of message
-- Encrypted message
+**Individual Byte:**
 
-## Message Details
+Each nibble of information is sent with a protocol code (the code is a nibble as well).
 
-4 Nibbles of information (for now)
+| Bits | What it is |
+| --- | --- |
+| 7 - 4 (most significant bits) | protocol codes |
+| 3 - 0 (least significant bits) | information |
+
+**Protocol Codes:**
+
+| Code | Description |
+| --- | --- |
+| 0011 | User ID |
+| 1100 | Message Length |
+| 1111 | Encrypted Message |
+| anything else | invalid or interupt |
+
+**Full Protocol:**
+
+| Bytes | Description |
+| --- | --- |
+| 0 - 3 | User ID |
+| 4 - 5 | Length |
+| 6 - N | Encrypted Message |
