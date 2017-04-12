@@ -46,6 +46,7 @@ If any stage fails, reset the program. There will be feedback provided when the 
 2. Read in the user ID and encrypted message from the protocol.
 3. Validate that the message was received successfully, making sure to provide user feedback.
 4. After receiving a successful message according to the protocol, decrypt the message message and display it.
+5. After decrypting and displaying the message, return an acknowledgement to the write Arduino.
 
 ## CRA-Protocol
 
