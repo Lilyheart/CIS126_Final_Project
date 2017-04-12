@@ -32,28 +32,31 @@ Since it is your implementation of a protocol, it may involve timing and pin sta
 
 ## Program Flow
 
-If any stage fails, reset the program. (Reset feedback) Make sure keep the status indicators convey the current state.
+If any stage fails, reset the program. There will be feedback provided when the program resets. There will also be status indicators to display the progress.
 
 **Write Arduino:**
-1. The user enters their ID code and presses a button to enter it.
-2. Give feedback that user ID was successful or failed.
-3. After user ID is validated, the user enters a message to send and presses a button to send it.
+1. The user enters their ID code on the 4x4 keypad, and then the user presses a button to submit it.
+2. Give feedback that user ID was a successful or failed attempt.
+3. After the user ID is validated, the user enters a message to send and presses a button to submit it.
 4. Encrypt the message, and display the encrypted message.
-5. Send the encrypted message to the second arduino, using our custom protocol.
+5. Send the encrypted message to the second arduino, using the custom protocol outlined below.
 
 **Read Arduino:**
-1. Poll for beginning of our custom protocol.
+1. Poll for beginning of the custom protocol outlined below.
 2. Read in the user ID and encrypted message from the protocol.
-3. Validate that the message was received successfully (status indicator feedback).
-4. After receiving a successful message, decrypt the message message and display it.
+3. Validate that the message was received successfully, making sure to provide user feedback.
+4. After receiving a successful message according to the protocol, decrypt the message message and display it.
 
-## **CRAP**
+## CRA-Protocol
 
-**C**ommunication **R**elay **A**rduino **P**rotocol
+**C**ommunication  
+**R**elay  
+**A**rduino  
+**P**rotocol
 
 **Individual Byte:**
 
-Each nibble of information is sent with a protocol code (the code is a nibble as well).
+Each nibble of information is sent with a protocol code (the code is a nibble as well). This means each nibble of information results in one byte of informaiton.
 
 | Bits | What it is |
 | --- | --- |
