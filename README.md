@@ -28,7 +28,7 @@ Since it is your implementation of a protocol, it may involve timing and pin sta
 1. Enter a user ID code and receive a confirmation (LEDs, flag waving, sound).
 2. If valid return a cipher key
 3. Send the cipher key back (confirming the shift with the user), encrypted, and confirm the exchange. This will demonstrate the key was received and the cipher agreed to.
-4. Send the cipher encrypted text from the first Arduino to the second Arduino, where it will be decoded back to plain text and displayed. 
+4. Send the cipher encrypted text from the first Arduino to the second Arduino, where it will be decoded back to plain text and displayed.
 
 ## Program Flow
 
@@ -36,10 +36,14 @@ If any stage fails, reset the program. There will be feedback provided when the 
 
 **Write Arduino:**
 1. The user enters their ID code on the 4x4 keypad, and then the user presses a button to submit it.
-2. Give feedback that user ID was a successful or failed attempt.
-3. After the user ID is validated, the user enters a message to send and presses a button to submit it.
-4. Encrypt the message, and display the encrypted message.
-5. Send the encrypted message to the second arduino, using the custom protocol outlined below.
+1. Give feedback that user ID was a successful or failed attempt.
+1. After the user ID is validated, the user enters a message to send and presses a button to submit it.
+1. Encrypt the message.
+1. Send the encrypted message to the second Arduino, using the custom protocol outlined below.
+1. Receive acknowledgement from the Read Arduino and update status indicator.
+1. Return to beginning state.
+
+
 
 **Read Arduino:**
 1. Poll for beginning of the custom protocol outlined below.
