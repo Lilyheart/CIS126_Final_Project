@@ -72,9 +72,11 @@ Each nibble of information is sent with a protocol code (the code is a nibble as
 
 | Code | Description |
 | --- | --- |
-| 0011 | User ID |
-| 1100 | Message Length |
+| 1100 | User ID |
 | 1111 | Encrypted Message |
+| 0111 | Sucessful Acknowledgement (ACK) |
+| 0100 | Failed Acknowledgement (NAK) |
+| 0101 | Invalid UserId |
 | anything else | invalid or interupt |
 
 **Full Protocol:**
@@ -82,5 +84,4 @@ Each nibble of information is sent with a protocol code (the code is a nibble as
 | Bytes | Description |
 | --- | --- |
 | 0 - 3 | User ID |
-| 4 - 5 | Length |
-| 6 - N | Encrypted Message |
+| 4 - 7 | Encrypted Message |
