@@ -9,6 +9,7 @@ Adafruit_Trellis matrix0 = Adafruit_Trellis();
 Adafruit_TrellisSet trellis =  Adafruit_TrellisSet(&matrix0);
 
 uint16_t matrixValue;
+uint8_t matrixNibbles[4];
 
 uint8_t writeArduinoState; //TODO uint8_t?
 
@@ -26,6 +27,7 @@ uint16_t validUserIDs[3][2] = {
   {38505, 6},
   {42405, 8}
 };
+uint8_t authenticatedUser;
 
 uint8_t userShift;
 
@@ -58,7 +60,7 @@ void trellisButtonPress() {
 }
 
 /*
- * Read trellis LEDs
+ * Read & Process trellis LEDs
  */
 
 void getMatrixInput() {
@@ -70,6 +72,22 @@ void getMatrixInput() {
       matrixValue = (~(1 << position)) & matrixValue;
     }
   }
+}
+
+uint32_t encodeNibble(uint16_t val, uint8_t k) {
+  uint8_t shift = validUserIDs[authenticatedUser][1];
+  return (((val >> (4*k)) + shift) % 16) & 0x0F;
+}
+
+uint16_t encodeMessage() {
+  uint16_t encodedMessage;
+
+  for (int i = 0; i < 4 ; i++) {
+    uint8_t position = (4*i);
+    encodedMessage = (encodeNibble(matrixValue, i) << position) | encodedMessage;
+  }
+
+  return encodedMessage;
 }
 
 /*
@@ -97,9 +115,11 @@ boolean authenticateUserID() {
   for (uint8_t i=0; i<(sizeof validUserIDs / sizeof validUserIDs[0]); i++) {
     if(matrixValue == validUserIDs[i][0]){
       userShift = validUserIDs[i][1];
+      authenticatedUser = i;
       return true;
     }
   }
+  authenticatedUser = 0;
   return false;
 }
 
@@ -123,6 +143,7 @@ void updateReadArduinoStatus(uint8_t newStatus) {
       Serial.println("STATE_ACK");
       digitalWrite(LED_UID, LOW);
       digitalWrite(LED_MSG, LOW);
+      authenticatedUser = 0;
       break;
     default:
       break;
@@ -177,9 +198,9 @@ void loop() {
           updateReadArduinoStatus(STATE_MSG);
         } else {
           digitalWrite(LED_ERR, HIGH);
-          // updateErrorLED(INPUTSTATE);
-          // resetMatrix();
-          // stay in state 1
+          // updateErrorLED(INPUTSTATE); TODO
+          // resetMatrix(); TODO
+          // stay in state 1 TODO
         }
       }
       break;
@@ -187,10 +208,9 @@ void loop() {
       trellisButtonPress();
         if (isSubmitButtonPressed){
           getMatrixInput();
-        // encodeMessage();
-        // sendMessage();{
-        // updateReadArduinoStatus(INPUTSTATE);
-        // move to state 3
+          Serial.println(encodeMessage(), HEX);
+        // sendMessage();{ TODO
+          updateReadArduinoStatus(STATE_ACK);
         }
       break;
     case STATE_ACK: // Waiting for acknowledge
@@ -201,6 +221,7 @@ void loop() {
         // } else {
           // light error led
           // flash 4x4 a few times
+          updateReadArduinoStatus(STATE_UID);
           // move to state 1
         // }
       // }
