@@ -11,16 +11,16 @@ Adafruit_TrellisSet trellis =  Adafruit_TrellisSet(&matrix0);
 uint16_t matrixValue;
 uint8_t matrixNibbles[4];
 
-uint8_t writeArduinoState; //TODO uint8_t?
+uint8_t writeArduinoState;
 
 boolean isSubmitButtonPressed;
-uint8_t buttonState = 0;         // variable for reading the pushbutton status
+uint8_t buttonState = 0;
 uint8_t lastButtonState;
 const uint8_t ledPin = 99;
 const uint8_t LED_UID = 3;
 const uint8_t LED_MSG = 4;
 const uint8_t LED_ERR = 13;
-const uint8_t bigButtonPin = 2;     // the number of the pushbutton pin
+const uint8_t bigButtonPin = 2;
 
 uint16_t validUserIDs[3][2] = {
   {4680, 3},
@@ -136,8 +136,8 @@ void updateReadArduinoStatus(uint8_t newStatus) {
       break;
     case STATE_MSG:
       Serial.println("STATE_MSG");
-      digitalWrite(LED_UID, HIGH);
-      digitalWrite(LED_MSG, LOW);
+      digitalWrite(LED_UID, LOW);
+      digitalWrite(LED_MSG, HIGH);
       break;
     case STATE_ACK:
       Serial.println("STATE_ACK");
@@ -155,8 +155,11 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Trellis Setup");
 
-  // initlize trellis board
+
+  // initlize trellis board & LEDs
   trellis.begin(0x70);
+  pinMode(LED_UID, OUTPUT);
+  pinMode(LED_MSG, OUTPUT);
 
   // light up trellis board sequentially to indicate initalization
   for (uint8_t i=0; i<16; i++) {
@@ -214,18 +217,18 @@ void loop() {
         }
       break;
     case STATE_ACK: // Waiting for acknowledge
-      // if(isMessageReceived) {
+//      if(isMessageReceived) {
         // parseCRAP();
-        // if(isMessageSuccessful) {
-          // move to state 1
-        // } else {
+//        if(isMessageSuccessful) {
+          updateReadArduinoStatus(STATE_UID);
+//        } else {
           // light error led
           // flash 4x4 a few times
           updateReadArduinoStatus(STATE_UID);
           // move to state 1
-        // }
-      // }
-       break;
+//        }
+//      }
+      break;
     default:
       break;
   }
