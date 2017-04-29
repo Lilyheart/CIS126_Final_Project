@@ -1,13 +1,13 @@
-// Communication Relay Arduino Protocol
+// Custom Protocol
 #include <Arduino.h>
 
-class CRAP {
+class CustomProtocol {
 
     private:
 
         // variables for tracking protocol state
-        unsigned short crapUserId = 0;
-        unsigned short crapMessage = 0;
+        unsigned short protocolUserId = 0;
+        unsigned short protocolMessage = 0;
         int incomingByteIndex = 0;
         bool didLastMessageFail = false;
         bool isWaiting = true;
@@ -22,19 +22,19 @@ class CRAP {
 
     public:
 
-        // CRAP Codes
+        // Protocol Codes
+        #define INTERUPT 0xf
         #define USER_ID 0x4
         #define ENCRYPTED_MESSAGE 0x6
         #define SUCCESSFUL_ACKNOWLEDGEMENT 0x8
-        #define FAILED_ACKNOWLEDGEMENT 0x9
-        #define INVALID_USER_ID 0xa
 
         // constructor
-        CRAP();
+        CustomProtocol();
 
         // used for convert
+        static bool isSuccessfulAcknowledgement(byte incomingByte);
         static void sendMessage(unsigned short userId, unsigned short message);
-        static void sendResponse(byte crapCode);
+        static void sendCode(byte protocolCode);
         static byte getProtocolCode(byte protocolByte);
         static byte getProtocolData(byte protocolByte);
         void processIncomingByte(byte incomingByte);
