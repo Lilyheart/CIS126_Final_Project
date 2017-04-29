@@ -52,12 +52,7 @@ If any stage fails, reset the program. There will be feedback provided when the 
 4. After receiving a successful message according to the protocol, decrypt the message message and display it.
 5. After decrypting and displaying the message, return an acknowledgement to the write Arduino.
 
-## CRA-Protocol
-
-**C**ommunication  
-**R**elay  
-**A**rduino  
-**P**rotocol
+## Custom Protocol
 
 **Individual Byte:**
 
@@ -66,22 +61,26 @@ Each nibble of information is sent with a protocol code (the code is a nibble as
 | Bits | What it is |
 | --- | --- |
 | 7 - 4 (most significant bits) | protocol codes |
-| 3 - 0 (least significant bits) | information |
+| 3 - 0 (least significant bits) | data |
 
 **Protocol Codes:**
 
 | Code | Description |
 | --- | --- |
-| 1100 | User ID |
-| 1111 | Encrypted Message |
-| 0111 | Sucessful Acknowledgement (ACK) |
-| 0100 | Failed Acknowledgement (NAK) |
-| 0101 | Invalid UserId |
-| anything else | invalid or interupt |
+| 0xf | Interupt |
+| 0x4 | User ID |
+| 0x6 | Encrypted Message |
+| 0x8 | Successful Acknowledgement (ACK) |
+| anything else | Invalid |
 
-**Full Protocol:**
+**Full Protocol for sending a message:**
 
 | Bytes | Description |
 | --- | --- |
 | 0 - 3 | User ID |
 | 4 - 7 | Encrypted Message |
+
+**Full Protocol for successful response acknowledgement:**
+
+A single byte with the value 0x80.
+
