@@ -23,6 +23,7 @@ cryptDecodeNibble:
         brge failedCrypt                ;if (input >= 16), goto failedCrypt
         ldi r30, lo8(cipherTable)       ;loading table address into z lo8
         ldi r31, hi8(cipherTable)       ;loading table address into z hi8
+        ldi r21, 1                      ;load 1 into r21
         ldi r22, 0                      ;start i = 0
         jmp decodeLoopStart             ;goto decodeLoopStart
 
@@ -30,7 +31,7 @@ decodeLoop:
         inc r22                         ;i++
         cpi r22, 16                     ;compare i with 16
         breq failedCrypt                ;if (i == 16), goto failedCrypt
-        inc r30                         ;r30
+        add r30, r21                    ;r30++
         adc r31, r1                     ;add carry if lower address overflowed
 
 decodeLoopStart:
