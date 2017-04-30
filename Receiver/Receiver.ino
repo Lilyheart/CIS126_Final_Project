@@ -16,7 +16,6 @@ CustomProtocol* listner = new CustomProtocol();
 byte nextByte = 0;
 unsigned short lastSuccessfulUserId = 0;
 unsigned short lastSuccessfulMessage = 0;
-unsigned long lastSuccessfulMessageTime;
 
 // helper function for decoding the message
 unsigned short decodeMessage(unsigned short encodedMessage) {
@@ -114,13 +113,11 @@ void loop() {
 
             // updating status indicators
             CustomProtocol::sendCode(SUCCESSFUL_ACKNOWLEDGEMENT);
-            lastSuccessfulMessageTime = millis();
         }
     }
-    bool hasReachedDisplayTimeLimit = (millis() - lastSuccessfulMessageTime) > DISPLAY_TIME;
     if (listner->hasMessageFailed()) {
         updateStatusIndicators(STATUS_FAILED);
-    } else if (!(listner->isMessageComplete()) || hasReachedDisplayTimeLimit) {
+    } else if (!(listner->isMessageComplete())) {
         updateStatusIndicators(STATUS_WAITING);
     }
 }
