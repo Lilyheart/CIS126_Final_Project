@@ -14,6 +14,7 @@ cryptEncodeNibble:
         ldi r30, lo8(cipherTable)       ;loading table address into z lo8
         ldi r31, hi8(cipherTable)       ;loading table address into z hi8
         add r30, r24                    ;adding the shift to the address
+        adc r31, r1                     ;add carry if lower address overflowed
         ld r24, z                       ;return the new value
         ret
 
@@ -30,6 +31,7 @@ decodeLoop:
         cpi r22, 16                     ;compare i with 16
         breq failedCrypt                ;if (i == 16), goto failedCrypt
         inc r30                         ;r30
+        adc r31, r1                     ;add carry if lower address overflowed
 
 decodeLoopStart:
         ld r23, z                       ;value of z is in r23
