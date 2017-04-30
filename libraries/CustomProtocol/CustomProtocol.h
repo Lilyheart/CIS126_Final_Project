@@ -31,7 +31,6 @@ class CustomProtocol {
         // constructor
         CustomProtocol();
 
-        // used for convert
         static bool isSuccessfulAcknowledgement(byte incomingByte);
         static void sendMessage(unsigned short userId, unsigned short message);
         static void sendCode(byte protocolCode);

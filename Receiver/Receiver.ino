@@ -8,8 +8,6 @@
 #define STATUS_WAITING 12 // yellow led
 #define STATUS_FAILED 13 // red led
 
-#define DISPLAY_TIME 5000 // time to show status indicators
-
 LiquidCrystal lcd(2, 3, 4, 5, 6 , 7);
 CustomProtocol* listner = new CustomProtocol();
 
