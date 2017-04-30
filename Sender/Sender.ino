@@ -7,6 +7,13 @@
 #define STATE_MSG 1
 #define STATE_ACK 2
 
+#define LED_BUTTON 10
+#define LED_UID 11
+#define LED_MSG 12
+#define LED_ERR 13
+#define BUTTON 8
+
+
 #define DEBUG_MODE false
 #define WAIT_TIME 1000 // time to wait for response
 
@@ -21,11 +28,6 @@ uint8_t writeArduinoState;
 boolean isSubmitButtonPressed;
 uint8_t buttonState = 0;
 uint8_t lastButtonState;
-const uint8_t buttonledPin = 10;
-const uint8_t LED_UID = 11;
-const uint8_t LED_MSG = 12;
-const uint8_t LED_ERR = 13;
-const uint8_t bigButtonPin = 8;
 
 uint16_t validUserIDs[3] = {4680, 38505, 42405};
 uint8_t authenticatedUser;
@@ -91,14 +93,14 @@ void getMatrixInput() {
  *  Big Button Press and Big Button LED control
  */
 void bigButtonPress() {
-  buttonState = digitalRead(bigButtonPin);
+  buttonState = digitalRead(BUTTON);
   if (buttonState == HIGH) {
-    digitalWrite(buttonledPin, LOW);
+    digitalWrite(LED_BUTTON, LOW);
     if(lastButtonState != buttonState) {
       isSubmitButtonPressed = true;
     }
   } else {
-    digitalWrite(buttonledPin, HIGH);
+    digitalWrite(LED_BUTTON, HIGH);
   }
   lastButtonState = buttonState;
 }
@@ -186,8 +188,8 @@ void setup() {
   trellisFlashBoard(1);
 
   //Initalize BigButton
-  pinMode(bigButtonPin, INPUT);
-  pinMode(buttonledPin, OUTPUT);
+  pinMode(BUTTON, INPUT);
+  pinMode(LED_BUTTON, OUTPUT);
 
   //Initalize variables
   updateReadArduinoStatus(STATE_UID);
