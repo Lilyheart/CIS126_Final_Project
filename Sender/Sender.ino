@@ -8,6 +8,7 @@
 #define STATE_ACK 2
 
 #define DEBUG_MODE false
+#define WAIT_TIME 1000 // time to wait for response
 
 Adafruit_Trellis matrix0 = Adafruit_Trellis();
 Adafruit_TrellisSet trellis =  Adafruit_TrellisSet(&matrix0);
@@ -30,9 +31,7 @@ uint16_t validUserIDs[3] = {4680, 38505, 42405};
 uint8_t authenticatedUser;
 
 uint8_t userShift;
-
-
-
+unsigned long sendTime;
 
 /*
  *  Code to control Trellis LEDs
@@ -223,20 +222,26 @@ void loop() {
           isSubmitButtonPressed = false;
           getMatrixInput();
           sendMessage();
+          sendTime = millis();
           updateReadArduinoStatus(STATE_ACK);
         }
-      break;
+        break;
     case STATE_ACK: // Waiting for acknowledge
-//      if(isMessageReceived) {
-        // CUSTOMPROTOCOL::ISSUCCESFULRECEIVED();
-//        if(isMessageSuccessful) {
-//          updateReadArduinoStatus(STATE_UID);
-//        } else {
-          // light error led
-          trellisFlashBoard(2);
+      if ((millis() - sendTime) > WAIT_TIME) {
+        trellisFlashBoard(5);
+        updateReadArduinoStatus(STATE_UID);
+        digitalWrite(LED_ERR, HIGH);
+      }
+
+      // waiting for response
+      if (Serial.available()) {
+        // reading incoming bytes
+        byte nextByte = Serial.read();
+        if (CustomProtocol::isSuccessfulAcknowledgement(nextByte)) {
+          trellisFlashBoard(1);
           updateReadArduinoStatus(STATE_UID);
-//        }
-//      }
+        }
+      }
       break;
     default:
       break;
